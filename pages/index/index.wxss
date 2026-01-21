@@ -9,28 +9,47 @@
   min-height: 100vh;
   padding: 40rpx;
   box-sizing: border-box;
+  background-color: var(--color-bg);
 }
 
 /* 呼吸效果容器 */
 .breathing-container {
   position: relative;
   margin-bottom: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 茶杯容器 */
 .tea-cup {
   width: 300rpx;
   height: 300rpx;
-  background: radial-gradient(circle at center, #D4C4B7 30%, #E0D2C5 70%, #E8E0D9 100%);
+  background: radial-gradient(circle at center, #D9C6B0 30%, #E0D2C5 70%, #E8E0D9 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: var(--shadow-soft);
-  border: 10rpx solid rgba(255, 255, 255, 0.8);
+  box-shadow: inset 10rpx 10rpx 20rpx rgba(166, 145, 126, 0.2), 0 20rpx 40rpx var(--shadow-soft);
+  border: 12rpx solid #F9F7F2;
   /* 呼吸动画 */
   animation: breathe 4s ease-in-out infinite;
+  overflow: hidden;
+}
+
+/* 茶杯高光效果 */
+.tea-cup::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  right: 20%;
+  width: 80rpx;
+  height: 40rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transform: rotate(45deg);
+  box-shadow: 0 0 20rpx rgba(255, 255, 255, 0.8);
 }
 
 /* 呼吸动画定义 */
@@ -38,17 +57,62 @@
   0% {
     transform: scale(0.95);
     opacity: 0.9;
-    box-shadow: var(--shadow-soft);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.02);
     opacity: 1;
-    box-shadow: 0 15rpx 40rpx rgba(212, 196, 183, 0.2);
   }
   100% {
     transform: scale(0.95);
     opacity: 0.9;
-    box-shadow: var(--shadow-soft);
+  }
+}
+
+/* 热气容器 */
+.steam {
+  position: absolute;
+  width: 20rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  bottom: 20rpx;
+  z-index: 1;
+  animation: float linear infinite;
+}
+
+/* 第一缕热气 */
+.steam-1 {
+  left: 35%;
+  animation-duration: 3s;
+}
+
+/* 第二缕热气 */
+.steam-2 {
+  right: 35%;
+  animation-duration: 4.5s;
+}
+
+/* 热气浮动动画 */
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.8);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateY(-40rpx) translateX(10rpx) scale(0.9);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-80rpx) translateX(-10rpx) scale(1);
+    opacity: 0.3;
+  }
+  75% {
+    transform: translateY(-120rpx) translateX(5rpx) scale(1.1);
+    opacity: 0.1;
+  }
+  100% {
+    transform: translateY(-160rpx) translateX(0) scale(1.2);
+    opacity: 0;
   }
 }
 
@@ -83,7 +147,17 @@
   .tea-cup {
     width: 260rpx;
     height: 260rpx;
-    border-width: 8rpx;
+    border-width: 10rpx;
+  }
+  
+  .tea-cup::after {
+    width: 60rpx;
+    height: 30rpx;
+  }
+  
+  .steam {
+    width: 16rpx;
+    height: 60rpx;
   }
   
   .welcome-text text {

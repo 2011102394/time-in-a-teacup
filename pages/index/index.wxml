@@ -2,7 +2,10 @@
 <view class="container">
   <!-- 呼吸效果圆形容器 -->
   <view class="breathing-container">
-    <view class="tea-cup"></view>
+    <view class="tea-cup">
+      <view class="steam steam-1"></view>
+      <view class="steam steam-2"></view>
+    </view>
   </view>
   
   <!-- 欢迎语 -->
