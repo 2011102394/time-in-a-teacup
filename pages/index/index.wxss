@@ -1,0 +1,96 @@
+/* index.wxss */
+
+/* 页面容器样式 - 垂直居中 */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+/* 呼吸效果容器 */
+.breathing-container {
+  position: relative;
+  margin-bottom: 60rpx;
+}
+
+/* 茶杯容器 */
+.tea-cup {
+  width: 300rpx;
+  height: 300rpx;
+  background: radial-gradient(circle at center, #D4C4B7 30%, #E0D2C5 70%, #E8E0D9 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: var(--shadow-soft);
+  border: 10rpx solid rgba(255, 255, 255, 0.8);
+  /* 呼吸动画 */
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* 呼吸动画定义 */
+@keyframes breathe {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.9;
+    box-shadow: var(--shadow-soft);
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+    box-shadow: 0 15rpx 40rpx rgba(212, 196, 183, 0.2);
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.9;
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+/* 欢迎语样式 */
+.welcome-text {
+  text-align: center;
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.welcome-text text {
+  font-size: 32rpx;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  letter-spacing: 2rpx;
+}
+
+/* 交互提示文字 */
+.hint-text {
+  font-size: 20rpx;
+  color: #9B9B9B;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 1rpx;
+}
+
+/* 响应式调整 */
+@media (max-width: 375px) {
+  .tea-cup {
+    width: 260rpx;
+    height: 260rpx;
+    border-width: 8rpx;
+  }
+  
+  .welcome-text text {
+    font-size: 28rpx;
+  }
+  
+  .hint-text {
+    font-size: 18rpx;
+  }
+}

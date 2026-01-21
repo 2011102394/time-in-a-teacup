@@ -1,0 +1,13 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 呼吸效果圆形容器 -->
+  <view class="breathing-container">
+    <view class="tea-cup"></view>
+  </view>
+  
+  <!-- 欢迎语 -->
+  <view class="welcome-text">
+    <text>在流年里，慢下来。</text>
+    <text class="hint-text">轻触茶杯，开启今日日签</text>
+  </view>
+</view>
