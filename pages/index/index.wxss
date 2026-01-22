@@ -97,17 +97,20 @@
 .tea-cup {
   width: 230rpx;
   height: 230rpx;
-  background: radial-gradient(circle at center, #D9C6B0 30%, #E0D2C5 70%, #E8E0D9 100%);
+  background: radial-gradient(circle at 30% 30%, #C9B8A8 0%, #D9C6B0 40%, #E8DCC8 70%, #F5F0E5 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: inset 10rpx 10rpx 20rpx rgba(166, 145, 126, 0.2), 0 20rpx 40rpx var(--shadow-soft);
-  border: 12rpx solid #F9F7F2;
-  /* 呼吸动画 */
+  box-shadow: 
+    inset 0 20rpx 40rpx rgba(0, 0, 0, 0.15),
+    inset 0 -10rpx 20rpx rgba(255, 255, 255, 0.2),
+    inset 5rpx 5rpx 15rpx rgba(166, 145, 126, 0.3),
+    0 20rpx 50rpx rgba(0, 0, 0, 0.1);
+  border: 10rpx solid rgba(255, 255, 255, 0.25);
   animation: breathe 4s ease-in-out infinite;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* 茶杯高光效果 */
@@ -165,6 +168,79 @@
 }
 
 /* 热气容器 */
+.steam-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* 热气线条基础样式 */
+.steam {
+  position: absolute;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 50px;
+  filter: blur(2rpx);
+  opacity: 0;
+}
+
+/* 第一条热气 - 左侧 */
+.steam.s1 {
+  width: 8rpx;
+  height: 80rpx;
+  left: 35%;
+  bottom: 30%;
+  transform-origin: center bottom;
+  animation: steamRise 4s ease-out infinite;
+  animation-delay: 0s;
+}
+
+/* 第二条热气 - 中间偏右 */
+.steam.s2 {
+  width: 10rpx;
+  height: 100rpx;
+  left: 50%;
+  bottom: 25%;
+  transform-origin: center bottom;
+  animation: steamRise 5s ease-out infinite;
+  animation-delay: 1.5s;
+}
+
+/* 第三条热气 - 右侧 */
+.steam.s3 {
+  width: 6rpx;
+  height: 70rpx;
+  right: 35%;
+  bottom: 35%;
+  transform-origin: center bottom;
+  animation: steamRise 6s ease-out infinite;
+  animation-delay: 3s;
+}
+
+/* 热气上升动画 */
+@keyframes steamRise {
+  0% {
+    transform: translateY(0) scaleX(1) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-60rpx) scaleX(1.2) translateX(8rpx);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-140rpx) scaleX(1.5) translateX(-5rpx);
+    opacity: 0;
+  }
+}
+
+/* 旧版热气浮动动画（保留兼容） */
 .steam {
   position: absolute;
   width: 16rpx;
@@ -437,7 +513,7 @@
   .tea-cup {
     width: 220rpx;
     height: 220rpx;
-    border-width: 10rpx;
+    border-width: 8rpx;
   }
   
   .tea-cup::after {
@@ -445,9 +521,19 @@
     height: 25rpx;
   }
   
-  .steam {
-    width: 14rpx;
-    height: 50rpx;
+  .steam.s1 {
+    width: 6rpx;
+    height: 70rpx;
+  }
+  
+  .steam.s2 {
+    width: 8rpx;
+    height: 90rpx;
+  }
+  
+  .steam.s3 {
+    width: 5rpx;
+    height: 60rpx;
   }
   
   .vertical-text {
