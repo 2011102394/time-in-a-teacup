@@ -8,19 +8,31 @@ page {
   --color-accent-cream: #D4C4B7; /* 奶咖色 */
   --color-accent-blue: #B8C6D9; /* 雾霾蓝 */
   --color-success: #A8D8B9; /* 抹茶绿 */
-  
+
+  /* 幸运色变量 - 统一管理 */
+  --fortune-color-mist-blue: #B8C6D9; /* 晨雾蓝 */
+  --fortune-color-milk-white: #F5F0E8; /* 奶白色 */
+  --fortune-color-light-orange: #FFDAB9; /* 浅橘色 */
+  --fortune-color-mint-green: #A8D8B9; /* 薄荷绿 */
+  --fortune-color-light-purple: #D4C4B7; /* 淡紫色 */
+  --fortune-color-warm-yellow: #FFE4B5; /* 暖黄色 */
+  --fortune-color-cherry-pink: #FFD1DC; /* 樱花粉 */
+  --fortune-color-sky-blue: #B0E0E6; /* 天空蓝 */
+  --fortune-color-olive-green: #9CB071; /* 橄榄绿 */
+  --fortune-color-champagne: #F7E7CE; /* 香槟色 */
+
   /* UI组件变量 */
   --border-radius-card: 32rpx; /* 卡片大圆角 */
   --shadow-soft: 0 10rpx 30rpx rgba(0, 0, 0, 0.04); /* 柔和弥散阴影 */
-  
+
   /* 间距变量 */
   --spacing-unit: 40rpx; /* 基础间距 */
-  
+
   /* 全局样式重置 */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
+
   /* 全局基础样式 */
   background-color: var(--color-bg);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

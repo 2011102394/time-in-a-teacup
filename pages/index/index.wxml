@@ -31,8 +31,8 @@
       <!-- 幸运色 -->
       <view class="fortune-item">
         <text class="item-label">幸运颜色</text>
-        <view class="color-display" style="background-color: {{fortuneData.colorValue || '#D9C6B0'}}">
-          <text class="color-name">{{fortuneData.color}}</text>
+        <view class="color-display" style="background-color: {{fortuneData.colorCode}}">
+          <text class="color-name">{{fortuneData.colorName}}</text>
         </view>
       </view>
 

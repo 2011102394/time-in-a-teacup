@@ -22,7 +22,8 @@ exports.main = async (event, context) => {
       const defaultFortune = getDefaultFortune()
       return {
         keyword: defaultFortune.keyword,
-        color: defaultFortune.color,
+        colorName: defaultFortune.colorName,
+        colorCode: defaultFortune.colorCode,
         message: defaultFortune.message,
         success: true
       }
@@ -34,7 +35,8 @@ exports.main = async (event, context) => {
     console.log('获取每日运势成功:', result)
     return {
       keyword: result.keyword,
-      color: result.color,
+      colorName: result.colorName,
+      colorCode: result.colorCode,
       message: result.message,
       success: true
     }
@@ -45,7 +47,8 @@ exports.main = async (event, context) => {
     const defaultFortune = getDefaultFortune()
     return {
       keyword: defaultFortune.keyword,
-      color: defaultFortune.color,
+      colorName: defaultFortune.colorName,
+      colorCode: defaultFortune.colorCode,
       message: defaultFortune.message,
       success: true,
       error: error.message
@@ -56,20 +59,17 @@ exports.main = async (event, context) => {
 // 调用混元API
 function callHunyuanAPI(apiKey) {
   return new Promise((resolve, reject) => {
-    const model = 'hunyuan-turbos-latest'
+    const model = 'hunyuan-2.0-instruct-20251111'
     const currentDate = new Date().toISOString().split('T')[0]
-    const prompt = `你是一个温暖治愈的时光解读者，根据今天的日期${currentDate}，为用户生成一个独特的每日运势。
+    const prompt = `根据日期${currentDate}，生成今日运势。要求：
 
-请生成：
-1. 今日关键词：一个2-3字的充满诗意或禅意的词，如"微风"、"晨露"、"星辰"、"温暖"、"宁静"等，每次都要随机选择，不要重复
-2. 幸运色：一种温柔治愈的颜色，从以下颜色中选择：晨雾蓝、奶白色、浅橘色、薄荷绿、淡紫色、暖黄色、樱花粉、天空蓝、橄榄绿、香槟色，每次随机选择
-3. 治愈短句：一句20-35字的温暖治愈短句，富有哲理，温柔文艺，给用户力量和安慰
+1. keyword: 2-3字的关键词，富有诗意和禅意
+2. colorName: 颜色的中文名称，优雅诗意
+3. colorCode: 十六进制颜色代码，格式#XXXXXX
+4. message: 20-35字的治愈短句
 
-要求：
-- 每次生成都要有创意，不要重复相同的词、句
-- 语气温柔文艺，给人温暖治愈的感觉
-- 以纯JSON格式返回，格式为：{"keyword":"关键词","color":"幸运色","message":"治愈短句"}
-- 不要添加任何其他文字或说明，只返回JSON`
+重要：每次生成的内容必须独特，避免重复。返回纯JSON格式：
+{"keyword":"...","colorName":"...","colorCode":"#......","message":"..."}`
     
     const requestData = {
       model: model,
@@ -156,9 +156,10 @@ function callHunyuanAPI(apiKey) {
 // 解析模型返回的内容（兼容非JSON格式）
 function parseFortuneContent(content) {
   let keyword = '微光'
-  let color = '晨雾蓝'
+  let colorName = '晨雾蓝'
+  let colorCode = '#B8C6D9'
   let message = '今日的微光，是明天的太阳。慢慢来，时间会给你答案。'
-  
+
   // 简单的解析逻辑
   if (content.includes('关键词')) {
     const keywordMatch = content.match(/关键词[：:：]([^，,]+)/)
@@ -166,21 +167,27 @@ function parseFortuneContent(content) {
       keyword = keywordMatch[1].trim()
     }
   }
-  
+
   if (content.includes('幸运色')) {
     const colorMatch = content.match(/幸运色[：:：]([^，,]+)/)
     if (colorMatch && colorMatch[1]) {
-      color = colorMatch[1].trim()
+      colorName = colorMatch[1].trim()
     }
   }
-  
+
+  // 尝试匹配十六进制颜色代码
+  const hexColorMatch = content.match(/#[0-9A-Fa-f]{6}/)
+  if (hexColorMatch) {
+    colorCode = hexColorMatch[0]
+  }
+
   if (content.includes('治愈短句')) {
     const messageMatch = content.match(/治愈短句[：:：](.+)/)
     if (messageMatch && messageMatch[1]) {
       message = messageMatch[1].trim()
     }
   }
-  
+
   // 如果中文冒号匹配失败，尝试英文冒号
   if (keyword === '微光' && content.includes('keyword')) {
     const keywordMatch = content.match(/keyword[：:：](["']?)([^"'}]+)\1/)
@@ -188,24 +195,32 @@ function parseFortuneContent(content) {
       keyword = keywordMatch[2].trim()
     }
   }
-  
-  if (color === '晨雾蓝' && content.includes('color')) {
-    const colorMatch = content.match(/color[：:：](["']?)([^"'}]+)\1/)
+
+  if (colorName === '晨雾蓝' && content.includes('colorName')) {
+    const colorMatch = content.match(/colorName[：:：](["']?)([^"'}]+)\1/)
     if (colorMatch && colorMatch[2]) {
-      color = colorMatch[2].trim()
+      colorName = colorMatch[2].trim()
     }
   }
-  
+
+  if (colorCode === '#B8C6D9' && content.includes('colorCode')) {
+    const colorCodeMatch = content.match(/colorCode[：:：](["']?)([^"'}]+)\1/)
+    if (colorCodeMatch && colorCodeMatch[2]) {
+      colorCode = colorCodeMatch[2].trim()
+    }
+  }
+
   if (message.includes('微光') && content.includes('message')) {
     const messageMatch = content.match(/message[：:：](["']?)([^"'}]+)\1/)
     if (messageMatch && messageMatch[2]) {
       message = messageMatch[2].trim()
     }
   }
-  
+
   return {
     keyword,
-    color,
+    colorName,
+    colorCode,
     message
   }
 }
@@ -215,31 +230,36 @@ function getDefaultFortune() {
   const dailyFortunes = [
     {
       keyword: '微光',
-      color: '晨雾蓝',
+      colorName: '晨雾蓝',
+      colorCode: '#B8C6D9',
       message: '今日的微光，是明天的太阳。慢慢来，时间会给你答案。'
     },
     {
       keyword: '宁静',
-      color: '奶白色',
+      colorName: '奶白色',
+      colorCode: '#F5F0E8',
       message: '在宁静中找到力量，每一刻都是新的开始。'
     },
     {
       keyword: '温暖',
-      color: '浅橘色',
+      colorName: '浅橘色',
+      colorCode: '#FFE4B5',
       message: '温暖的相遇，是生活最好的礼物。'
     },
     {
       keyword: '希望',
-      color: '薄荷绿',
+      colorName: '薄荷绿',
+      colorCode: '#98FB98',
       message: '带着希望前行，每一步都值得珍惜。'
     },
     {
       keyword: '从容',
-      color: '淡紫色',
+      colorName: '淡紫色',
+      colorCode: '#D8BFD8',
       message: '从容面对生活，美好会不期而遇。'
     }
   ]
-  
+
   const randomIndex = Math.floor(Math.random() * dailyFortunes.length)
   return dailyFortunes[randomIndex]
 }

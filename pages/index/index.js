@@ -25,23 +25,6 @@ Page({
     })
   },
   
-  // 获取颜色值映射
-  getColorValue(colorName) {
-    const colorMap = {
-      '晨雾蓝': '#B8C6D9',
-      '奶白色': '#F5F0E8',
-      '浅橘色': '#FFDAB9',
-      '薄荷绿': '#A8D8B9',
-      '淡紫色': '#D4C4B7',
-      '暖黄色': '#FFE4B5',
-      '樱花粉': '#FFD1DC',
-      '天空蓝': '#B0E0E6',
-      '橄榄绿': '#9CB071',
-      '香槟色': '#F7E7CE'
-    }
-    return colorMap[colorName] || '#D9C6B0'
-  },
-  
   // 茶杯点击事件
   onGetFortune() {
     console.log('点击茶杯，获取今日日签')
@@ -66,16 +49,10 @@ Page({
       data: {},
       success: (res) => {
         console.log('云函数调用成功:', res.result)
-        
-        // 获取颜色值
-        const colorValue = this.getColorValue(res.result.color)
-        
-        // 保存运势数据
+
+        // 保存运势数据（颜色值直接使用大模型返回的HEX代码）
         this.setData({
-          fortuneData: {
-            ...res.result,
-            colorValue: colorValue
-          },
+          fortuneData: res.result,
           isLoading: false
         })
         
@@ -83,7 +60,7 @@ Page({
         if (res.result.success) {
           console.log('=== 今日日签 ===')
           console.log('关键词:', res.result.keyword)
-          console.log('幸运色:', res.result.color)
+          console.log('幸运色:', res.result.colorName, res.result.colorCode)
           console.log('治愈短句:', res.result.message)
           console.log('=============')
           
