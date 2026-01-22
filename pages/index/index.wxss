@@ -11,6 +11,40 @@
   box-sizing: border-box;
   background-color: var(--color-bg);
   transition: all 0.3s ease;
+  position: relative;
+}
+
+/* 顶部导航 - 固定悬浮 */
+.top-nav {
+  position: absolute;
+  top: 40rpx;
+  display: flex;
+  gap: 40rpx;
+  z-index: 10;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.nav-item:active {
+  transform: scale(0.95);
+}
+
+.nav-icon {
+  font-size: 40rpx;
+  opacity: 0.8;
+}
+
+.nav-text {
+  font-size: 20rpx;
+  color: var(--color-text-secondary);
+  letter-spacing: 1rpx;
 }
 
 /* 有日签时的容器样式 */
@@ -276,8 +310,14 @@
 /* 卡片底部 */
 .fortune-footer {
   display: flex;
+  flex-direction: column;
   gap: 20rpx;
   margin-top: 50rpx;
+}
+
+.action-group {
+  display: flex;
+  gap: 20rpx;
 }
 
 .action-btn {
@@ -290,10 +330,20 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.action-btn .btn-icon {
+  margin-right: 6rpx;
+  font-size: 26rpx;
+}
+
+.action-btn .btn-text {
+  font-size: 26rpx;
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, #D9C6B0 0%, #E0D2C5 100%);
+  background: linear-gradient(135deg, #D9C6B0 0%, #C4B4A2 100%);
   color: #4A4A4A;
   font-weight: 500;
 }
@@ -301,6 +351,17 @@
 .action-btn.secondary {
   background-color: #F5F0E8;
   color: #6B6B6B;
+  font-size: 26rpx;
+}
+
+.action-btn.favorite {
+  background: linear-gradient(135deg, #FFF8E1 0%, #FFEBA7 100%);
+  color: #8B7355;
+}
+
+.action-btn.favorited {
+  background: linear-gradient(135deg, #FFD1DC 0%, #FFB6C1 100%);
+  color: #6B4B5F;
 }
 
 .action-btn:active {

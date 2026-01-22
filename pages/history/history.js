@@ -13,6 +13,15 @@ Page({
   },
 
   /**
+   * 返回首页
+   */
+  goBack() {
+    wx.reLaunch({
+      url: '/pages/index/index'
+    })
+  },
+
+  /**
    * 加载历史记录
    */
   loadHistory() {

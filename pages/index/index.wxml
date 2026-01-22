@@ -1,30 +1,31 @@
 <!--index.wxml-->
-<view class="container">
-  <!-- 导航入口 -->
-  <view class="nav-bar" wx:if="{{!fortuneData}}">
+<view class="container {{fortuneData ? 'has-fortune' : ''}}">
+  <!-- 顶部导航 - 始终显示 -->
+  <view class="top-nav">
     <view class="nav-item" bindtap="goToHistory">
-      <text class="nav-icon">📜</text>
-      <text class="nav-text">历史记录</text>
+      <view class="nav-icon">📜</view>
+      <text class="nav-text">历史</text>
     </view>
     <view class="nav-item" bindtap="goToFavorites">
-      <text class="nav-icon">⭐</text>
-      <text class="nav-text">我的收藏</text>
+      <view class="nav-icon">⭐</view>
+      <text class="nav-text">收藏</text>
     </view>
   </view>
+
   <!-- 呼吸效果圆形容器 -->
-  <view class="breathing-container" bindtap="onGetFortune">
+  <view class="breathing-container" bindtap="onGetFortune" wx:if="{{!fortuneData}}">
     <view class="tea-cup">
       <view class="steam steam-1"></view>
       <view class="steam steam-2"></view>
     </view>
   </view>
-  
+
   <!-- 欢迎语 -->
   <view class="welcome-text" wx:if="{{!fortuneData}}">
     <text>在流年里，慢下来。</text>
     <text class="hint-text">轻触茶杯，开启今日日签</text>
   </view>
-  
+
   <!-- 日签卡片 -->
   <view class="fortune-card" wx:if="{{fortuneData}}">
     <view class="fortune-header">
@@ -56,7 +57,17 @@
 
     <!-- 底部操作按钮 -->
     <view class="fortune-footer">
-      <button class="action-btn secondary" bindtap="onReset">再来一杯</button>
+      <view class="action-group">
+        <button class="action-btn secondary" bindtap="onReset">再来一杯</button>
+        <button class="action-btn favorite" bindtap="onFavorite" wx:if="{{!isFavorited}}">
+          <text class="btn-icon">⭐</text>
+          <text class="btn-text">收藏</text>
+        </button>
+        <button class="action-btn favorited" bindtap="onUnfavorite" wx:if="{{isFavorited}}">
+          <text class="btn-icon">❤️</text>
+          <text class="btn-text">已收藏</text>
+        </button>
+      </view>
       <button class="action-btn primary" open-type="share">分享日签</button>
     </view>
   </view>

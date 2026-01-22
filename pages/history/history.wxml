@@ -1,27 +1,36 @@
 <!--pages/history/history.wxml-->
 <view class="container">
-  <!-- 顶部标题 -->
-  <view class="header">
-    <text class="title">历史记录</text>
+  <!-- 顶部导航栏 -->
+  <view class="nav-header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+      <text class="back-text">返回</text>
+    </view>
+    <view class="header-title">历史记录</view>
+    <view class="spacer"></view>
   </view>
 
   <!-- 历史记录列表 -->
-  <view class="history-list" wx:if="{{historyList.length > 0}}">
-    <view class="history-item" wx:for="{{historyList}}" wx:key="_id" bindtap="onHistoryItem" data-item="{{item}}">
-      <view class="history-date">{{item.date}}</view>
-      <view class="history-content">
-        <view class="history-keyword">{{item.keyword}}</view>
-        <view class="history-message">{{item.message}}</view>
-        <view class="history-color">
-          <view class="color-tag" style="background-color: {{item.colorCode}}">{{item.colorName}}</view>
+  <scroll-view class="history-scroll" scroll-y wx:if="{{historyList.length > 0}}">
+    <view class="history-list">
+      <view class="history-item" wx:for="{{historyList}}" wx:key="_id" bindtap="onHistoryItem" data-item="{{item}}">
+        <view class="history-decorate">🍵</view>
+        <view class="history-content">
+          <view class="history-date">{{item.date}}</view>
+          <view class="history-keyword">{{item.keyword}}</view>
+          <view class="history-message">{{item.message}}</view>
+          <view class="history-color">
+            <view class="color-tag" style="background-color: {{item.colorCode}}">{{item.colorName}}</view>
+          </view>
         </view>
       </view>
     </view>
-  </view>
+  </scroll-view>
 
   <!-- 空状态 -->
   <view class="empty-state" wx:if="{{historyList.length === 0}}">
-    <text class="empty-text">还没有历史记录</text>
+    <view class="empty-icon">🍂</view>
+    <text class="empty-text">茶香暂无记录</text>
     <text class="empty-hint">去获取你的第一张日签吧</text>
   </view>
 </view>

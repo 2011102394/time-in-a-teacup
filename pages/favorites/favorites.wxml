@@ -1,0 +1,40 @@
+<!--pages/favorites/favorites.wxml-->
+<view class="container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+      <text class="back-text">返回</text>
+    </view>
+    <view class="header-title">我的收藏</view>
+    <view class="spacer"></view>
+  </view>
+
+  <!-- 收藏列表 -->
+  <scroll-view class="favorites-scroll" scroll-y wx:if="{{favoritesList.length > 0}}">
+    <view class="favorites-list">
+      <view class="favorite-item" wx:for="{{favoritesList}}" wx:key="_id">
+        <view class="favorite-content">
+          <view class="favorite-date">{{item.date}}</view>
+          <view class="favorite-keyword">{{item.keyword}}</view>
+          <view class="favorite-message">{{item.message}}</view>
+          <view class="favorite-color">
+            <view class="color-tag" style="background-color: {{item.colorCode}}">{{item.colorName}}</view>
+          </view>
+        </view>
+        <view class="favorite-actions">
+          <view class="unfavorite-btn" bindtap="onUnfavorite" data-id="{{item._id}}" data-index="{{index}}">
+            <text class="unfavorite-icon">💔</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{favoritesList.length === 0}}">
+    <view class="empty-icon">💝</view>
+    <text class="empty-text">暂无收藏</text>
+    <text class="empty-hint">收藏喜欢的日签，留住美好时光</text>
+  </view>
+</view>

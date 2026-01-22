@@ -2,7 +2,8 @@
 Page({
   data: {
     fortuneData: null,
-    todayDate: ''
+    todayDate: '',
+    isFavorited: false
   },
 
   /**
@@ -54,6 +55,9 @@ Page({
         this.setData({
           fortuneData: res.result
         })
+
+        // 检查是否已收藏
+        this.checkFavorite(res.result)
 
         // 输出日签信息
         if (res.result.success) {
@@ -153,23 +157,107 @@ Page({
   },
 
   /**
-   * 跳转到收藏页（待实现）
+   * 跳转到收藏页
    */
   goToFavorites() {
-    wx.showToast({
-      title: '收藏功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/favorites/favorites'
     })
-  }
-    if (this.data.fortuneData) {
-      return {
-        title: `今日日签：${this.data.fortuneData.keyword}`,
-        path: '/pages/index/index'
+  },
+
+  /**
+   * 检查是否已收藏
+   * @param {Object} fortune - 运势数据
+   */
+  checkFavorite(fortune) {
+    const db = wx.cloud.database()
+
+    db.collection('favorites')
+      .where({
+        keyword: fortune.keyword,
+        message: fortune.message
+      })
+      .count({
+        success: (res) => {
+          this.setData({
+            isFavorited: res.total > 0
+          })
+        }
+      })
+  },
+
+  /**
+   * 添加收藏
+   */
+  onFavorite() {
+    const fortune = this.data.fortuneData
+    if (!fortune) return
+
+    const db = wx.cloud.database()
+    const today = new Date()
+    const dateStr = `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`
+
+    db.collection('favorites').add({
+      data: {
+        keyword: fortune.keyword,
+        colorName: fortune.colorName,
+        colorCode: fortune.colorCode,
+        message: fortune.message,
+        date: dateStr,
+        createdAt: db.serverDate()
+      },
+      success: () => {
+        console.log('收藏成功')
+        this.setData({
+          isFavorited: true
+        })
+        wx.showToast({
+          title: '已收藏',
+          icon: 'success'
+        })
+      },
+      fail: (err) => {
+        console.error('收藏失败:', err)
+        wx.showToast({
+          title: '收藏失败',
+          icon: 'none'
+        })
       }
-    }
-    return {
-      title: '浅杯流年 - 获取你的今日日签',
-      path: '/pages/index/index'
-    }
+    })
+  },
+
+  /**
+   * 取消收藏
+   */
+  onUnfavorite() {
+    const fortune = this.data.fortuneData
+    if (!fortune) return
+
+    const db = wx.cloud.database()
+
+    db.collection('favorites')
+      .where({
+        keyword: fortune.keyword,
+        message: fortune.message
+      })
+      .get({
+        success: (res) => {
+          if (res.data && res.data.length > 0) {
+            const id = res.data[0]._id
+            db.collection('favorites').doc(id).remove({
+              success: () => {
+                console.log('取消收藏成功')
+                this.setData({
+                  isFavorited: false
+                })
+                wx.showToast({
+                  title: '已取消收藏',
+                  icon: 'success'
+                })
+              }
+            })
+          }
+        }
+      })
   }
 })

@@ -21,8 +21,9 @@ const db = cloud.database()
  */
 exports.main = async (event, context) => {
   try {
-    // 调用云函数时，context 会自动包含 openid
-    const openid = context.OPENID || context.cloudContext?.OPENID
+    // 使用 getWXContext 获取用户 openid
+    const wxContext = cloud.getWXContext()
+    const openid = wxContext.OPENID
 
     if (!openid) {
       throw new Error('无法获取用户openid')
@@ -35,23 +36,36 @@ exports.main = async (event, context) => {
       _openid: openid
     }).get()
 
+    console.log('---------------------')
     const isRegistered = userResult.data && userResult.data.length > 0
+    console.log('用户注册状态:', isRegistered, '记录数:', userResult.data?.length || 0)
 
     // 如果用户不存在，创建用户记录
     if (!isRegistered) {
-      console.log('新用户，创建用户记录')
-      await db.collection('users').add({
-        data: {
-          _openid: openid,
-          createdAt: db.serverDate(),
-          updatedAt: db.serverDate()
+      console.log('新用户，创建用户记录，openid:', openid)
+      try {
+        const result = await db.collection('users').add({
+          data: {
+            _openid: openid,  // 显式设置 openid
+            createdAt: db.serverDate(),
+            updatedAt: db.serverDate()
+          }
+        })
+        console.log('用户记录创建成功，ID:', result._id)
+      } catch (addError) {
+        console.error('创建用户记录失败:', addError)
+        // 检查是否是重复键错误（通常是由于数据库中已有 _openid 为 null 的记录）
+        if (addError.errCode === -502001 || addError?.message?.includes('duplicate key')) {
+          console.log('用户记录可能已存在，视为已注册')
+        } else {
+          throw addError
         }
-      })
+      }
     }
 
     return {
       openid,
-      isRegistered,
+      isRegistered: true,
       createdAt: db.serverDate()
     }
   } catch (error) {
