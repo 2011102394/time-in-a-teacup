@@ -1,14 +1,37 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 const https = require('https')
-const http = require('http')
+
+/**
+ * 运势数据类型
+ * @typedef {Object} FortuneData
+ * @property {string} keyword - 2-3字关键词
+ * @property {string} colorName - 颜色中文名称
+ * @property {string} colorCode - 颜色HEX代码
+ * @property {string} message - 治愈短句
+ */
+
+/**
+ * 云函数响应类型
+ * @typedef {Object} FortuneResponse
+ * @property {string} keyword - 2-3字关键词
+ * @property {string} colorName - 颜色中文名称
+ * @property {string} colorCode - 颜色HEX代码
+ * @property {string} message - 治愈短句
+ * @property {boolean} success - 是否成功
+ * @property {string} [error] - 错误信息（失败时）
+ */
 
 // 初始化 cloud
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
 })
 
-// 云函数入口函数
+/**
+ * 云函数入口函数 - 获取每日运势
+ * @param {Object} event - 云函数入参
+ * @returns {Promise<FortuneResponse>} 运势数据
+ */
 exports.main = async (event, context) => {
   try {
     console.log('获取每日运势开始')
@@ -56,7 +79,11 @@ exports.main = async (event, context) => {
   }
 }
 
-// 调用混元API
+/**
+ * 调用腾讯混元AI API获取运势数据
+ * @param {string} apiKey - 混元API密钥
+ * @returns {Promise<FortuneData>} 运势数据
+ */
 function callHunyuanAPI(apiKey) {
   return new Promise((resolve, reject) => {
     const model = 'hunyuan-2.0-instruct-20251111'
@@ -111,25 +138,15 @@ function callHunyuanAPI(apiKey) {
           console.log('模型返回结果:', response)
           
           // 解析模型返回的结果
-          let fortuneData
           if (response && response.choices && response.choices.length > 0) {
             const content = response.choices[0].message.content
             console.log('模型生成内容:', content)
-
-            // 尝试解析JSON格式的结果
-            try {
-              fortuneData = JSON.parse(content)
-            } catch (e) {
-              // 如果JSON解析失败，使用正则表达式解析
-              fortuneData = parseFortuneContent(content)
-            }
+            resolve(JSON.parse(content))
           } else {
             // 如果API调用失败，使用默认数据
             console.log('API调用失败，使用默认数据')
-            fortuneData = getDefaultFortune()
+            resolve(getDefaultFortune())
           }
-          
-          resolve(fortuneData)
         } catch (e) {
           console.error('解析响应失败:', e)
           resolve(getDefaultFortune())
@@ -153,79 +170,10 @@ function callHunyuanAPI(apiKey) {
   })
 }
 
-// 解析模型返回的内容（兼容非JSON格式）
-function parseFortuneContent(content) {
-  let keyword = '微光'
-  let colorName = '晨雾蓝'
-  let colorCode = '#B8C6D9'
-  let message = '今日的微光，是明天的太阳。慢慢来，时间会给你答案。'
-
-  // 简单的解析逻辑
-  if (content.includes('关键词')) {
-    const keywordMatch = content.match(/关键词[：:：]([^，,]+)/)
-    if (keywordMatch && keywordMatch[1]) {
-      keyword = keywordMatch[1].trim()
-    }
-  }
-
-  if (content.includes('幸运色')) {
-    const colorMatch = content.match(/幸运色[：:：]([^，,]+)/)
-    if (colorMatch && colorMatch[1]) {
-      colorName = colorMatch[1].trim()
-    }
-  }
-
-  // 尝试匹配十六进制颜色代码
-  const hexColorMatch = content.match(/#[0-9A-Fa-f]{6}/)
-  if (hexColorMatch) {
-    colorCode = hexColorMatch[0]
-  }
-
-  if (content.includes('治愈短句')) {
-    const messageMatch = content.match(/治愈短句[：:：](.+)/)
-    if (messageMatch && messageMatch[1]) {
-      message = messageMatch[1].trim()
-    }
-  }
-
-  // 如果中文冒号匹配失败，尝试英文冒号
-  if (keyword === '微光' && content.includes('keyword')) {
-    const keywordMatch = content.match(/keyword[：:：](["']?)([^"'}]+)\1/)
-    if (keywordMatch && keywordMatch[2]) {
-      keyword = keywordMatch[2].trim()
-    }
-  }
-
-  if (colorName === '晨雾蓝' && content.includes('colorName')) {
-    const colorMatch = content.match(/colorName[：:：](["']?)([^"'}]+)\1/)
-    if (colorMatch && colorMatch[2]) {
-      colorName = colorMatch[2].trim()
-    }
-  }
-
-  if (colorCode === '#B8C6D9' && content.includes('colorCode')) {
-    const colorCodeMatch = content.match(/colorCode[：:：](["']?)([^"'}]+)\1/)
-    if (colorCodeMatch && colorCodeMatch[2]) {
-      colorCode = colorCodeMatch[2].trim()
-    }
-  }
-
-  if (message.includes('微光') && content.includes('message')) {
-    const messageMatch = content.match(/message[：:：](["']?)([^"'}]+)\1/)
-    if (messageMatch && messageMatch[2]) {
-      message = messageMatch[2].trim()
-    }
-  }
-
-  return {
-    keyword,
-    colorName,
-    colorCode,
-    message
-  }
-}
-
-// 获取默认运势数据
+/**
+ * 获取默认运势数据（API失败时的降级方案）
+ * @returns {FortuneData} 随机运势数据
+ */
 function getDefaultFortune() {
   const dailyFortunes = [
     {

@@ -1,18 +1,23 @@
 // index.js
 Page({
   data: {
-    // 页面数据
     isLoading: false,
     fortuneData: null,
     todayDate: ''
   },
+
+  /**
+   * 页面加载
+   */
   onLoad() {
     // 页面加载时执行
     console.log('Home page loaded')
     this.setTodayDate()
   },
-  
-  // 设置当前日期
+
+  /**
+   * 设置当前日期
+   */
   setTodayDate() {
     const today = new Date()
     const year = today.getFullYear()
@@ -24,30 +29,26 @@ Page({
       todayDate: `${year}.${month}.${day} ${weekDay}`
     })
   },
-  
-  // 茶杯点击事件
+
+  /**
+   * 茶杯点击事件 - 获取今日运势
+   */
   onGetFortune() {
     console.log('点击茶杯，获取今日日签')
-    
-    // 设置加载状态
-    this.setData({
-      isLoading: true
+
+    // 显示加载提示
+    wx.showLoading({
+      title: '正在抽取日签...',
+      mask: true
     })
-    
-    // 播放茶杯震动动画
-    const teaCup = wx.createSelectorQuery().select('.tea-cup')
-    teaCup.fields({
-      size: true
-    }, (res) => {
-      // 这里可以添加更复杂的动画逻辑
-      console.log('茶杯动画效果')
-    }).exec()
-    
+
     // 调用云函数获取每日运势
     wx.cloud.callFunction({
       name: 'getDailyFortune',
       data: {},
       success: (res) => {
+        wx.hideLoading()
+
         console.log('云函数调用成功:', res.result)
 
         // 保存运势数据（颜色值直接使用大模型返回的HEX代码）
@@ -55,7 +56,7 @@ Page({
           fortuneData: res.result,
           isLoading: false
         })
-        
+
         // 输出日签信息
         if (res.result.success) {
           console.log('=== 今日日签 ===')
@@ -63,7 +64,7 @@ Page({
           console.log('幸运色:', res.result.colorName, res.result.colorCode)
           console.log('治愈短句:', res.result.message)
           console.log('=============')
-          
+
           wx.showToast({
             title: '获取日签成功',
             icon: 'success',
@@ -72,6 +73,7 @@ Page({
         }
       },
       fail: (err) => {
+        wx.hideLoading()
         console.error('云函数调用失败:', err)
         this.setData({
           isLoading: false
@@ -84,15 +86,25 @@ Page({
       }
     })
   },
-  
-  // 重置，重新获取日签
+
+  /**
+   * 重置 - 清空运势数据
+   */
   onReset() {
     this.setData({
       fortuneData: null
     })
+    wx.showToast({
+      title: '已重置',
+      icon: 'success',
+      duration: 1000
+    })
   },
-  
-  // 分享功能
+
+  /**
+   * 分享配置
+   * @returns {Object} 分享配置对象
+   */
   onShareAppMessage() {
     if (this.data.fortuneData) {
       return {
