@@ -1,74 +1,93 @@
 <!--index.wxml-->
-<view class="container {{fortuneData ? 'has-fortune' : ''}}">
-  <!-- 顶部导航 - 始终显示 -->
+<view class="container">
+  <!-- 噪点纹理背景 -->
+  <view class="texture-overlay"></view>
+  
+  <!-- 顶部胶囊导航 -->
   <view class="top-nav">
-    <view class="nav-item" bindtap="goToHistory">
-      <view class="nav-icon">📜</view>
-      <text class="nav-text">历史</text>
-    </view>
-    <view class="nav-item" bindtap="goToFavorites">
-      <view class="nav-icon">⭐</view>
-      <text class="nav-text">收藏</text>
-    </view>
-  </view>
-
-  <!-- 呼吸效果圆形容器 -->
-  <view class="breathing-container" bindtap="onGetFortune" wx:if="{{!fortuneData}}">
-    <view class="tea-cup">
-      <view class="steam steam-1"></view>
-      <view class="steam steam-2"></view>
+    <view class="nav-pill">
+      <view class="nav-item" bindtap="goToHistory">
+        <view class="nav-icon">📜</view>
+        <text class="nav-text">历史</text>
+      </view>
+      <view class="nav-divider"></view>
+      <view class="nav-item" bindtap="goToFavorites">
+        <view class="nav-icon">⭐</view>
+        <text class="nav-text">收藏</text>
+      </view>
     </view>
   </view>
-
-  <!-- 欢迎语 -->
-  <view class="welcome-text" wx:if="{{!fortuneData}}">
-    <text>在流年里，慢下来。</text>
-    <text class="hint-text">轻触茶杯，开启今日日签</text>
-  </view>
-
-  <!-- 日签卡片 -->
-  <view class="fortune-card" wx:if="{{fortuneData}}">
-    <view class="fortune-header">
-      <view class="fortune-date">{{todayDate}}</view>
-      <view class="fortune-title">今日寄语</view>
+  
+  <!-- 主内容区 -->
+  <view class="main-content">
+    <!-- 呼吸效果圆形容器 -->
+    <view class="breathing-container" bindtap="onGetFortune">
+      <view class="tea-cup">
+        <view class="steam steam-1"></view>
+        <view class="steam steam-2"></view>
+      </view>
     </view>
-
-    <view class="fortune-content">
-      <!-- 关键词 -->
-      <view class="fortune-item">
-        <text class="item-label">今日关键词</text>
-        <text class="item-value keyword">{{fortuneData.keyword}}</text>
+    
+    <!-- 竖排欢迎语 -->
+    <view class="vertical-welcome">
+      <text class="vertical-text">在流年里，慢下来</text>
+    </view>
+    
+    <!-- 提示文字 -->
+    <view class="hint-text">
+      <text>轻触茶杯，开启今日日签</text>
+    </view>
+  </view>
+  
+  <!-- 抽屉式结果卡片 -->
+  <view class="result-drawer {{fortuneData ? 'show' : ''}}">
+    <!-- 卡片把手 -->
+    <view class="drawer-handle"></view>
+    
+    <!-- 结果内容 -->
+    <view class="result-content">
+      <view class="fortune-header">
+        <view class="fortune-date">{{todayDate}}</view>
+        <view class="fortune-title">今日寄语</view>
       </view>
 
-      <!-- 幸运色 -->
-      <view class="fortune-item">
-        <text class="item-label">幸运颜色</text>
-        <view class="color-display" style="background-color: {{fortuneData.colorCode}}">
-          <text class="color-name">{{fortuneData.colorName}}</text>
+      <view class="fortune-content">
+        <!-- 关键词 -->
+        <view class="fortune-item">
+          <text class="item-label">今日关键词</text>
+          <text class="item-value keyword">{{fortuneData.keyword}}</text>
+        </view>
+
+        <!-- 幸运色 -->
+        <view class="fortune-item">
+          <text class="item-label">幸运颜色</text>
+          <view class="color-display" style="background-color: {{fortuneData.colorCode}}">
+            <text class="color-name">{{fortuneData.colorName}}</text>
+          </view>
+        </view>
+
+        <!-- 治愈短句 -->
+        <view class="fortune-item">
+          <text class="item-label">治愈寄语</text>
+          <text class="item-value message">{{fortuneData.message}}</text>
         </view>
       </view>
 
-      <!-- 治愈短句 -->
-      <view class="fortune-item">
-        <text class="item-label">治愈寄语</text>
-        <text class="item-value message">{{fortuneData.message}}</text>
+      <!-- 底部操作按钮 -->
+      <view class="fortune-footer">
+        <view class="action-group">
+          <button class="action-btn secondary" bindtap="onReset">再来一杯</button>
+          <button class="action-btn favorite" bindtap="onFavorite" wx:if="{{!isFavorited}}">
+            <text class="btn-icon">⭐</text>
+            <text class="btn-text">收藏</text>
+          </button>
+          <button class="action-btn favorited" bindtap="onUnfavorite" wx:if="{{isFavorited}}">
+            <text class="btn-icon">❤️</text>
+            <text class="btn-text">已收藏</text>
+          </button>
+        </view>
+        <button class="action-btn primary" open-type="share">分享日签</button>
       </view>
-    </view>
-
-    <!-- 底部操作按钮 -->
-    <view class="fortune-footer">
-      <view class="action-group">
-        <button class="action-btn secondary" bindtap="onReset">再来一杯</button>
-        <button class="action-btn favorite" bindtap="onFavorite" wx:if="{{!isFavorited}}">
-          <text class="btn-icon">⭐</text>
-          <text class="btn-text">收藏</text>
-        </button>
-        <button class="action-btn favorited" bindtap="onUnfavorite" wx:if="{{isFavorited}}">
-          <text class="btn-icon">❤️</text>
-          <text class="btn-text">已收藏</text>
-        </button>
-      </view>
-      <button class="action-btn primary" open-type="share">分享日签</button>
     </view>
   </view>
 </view>
