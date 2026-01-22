@@ -1,5 +1,16 @@
 <!--index.wxml-->
 <view class="container">
+  <!-- 导航入口 -->
+  <view class="nav-bar" wx:if="{{!fortuneData}}">
+    <view class="nav-item" bindtap="goToHistory">
+      <text class="nav-icon">📜</text>
+      <text class="nav-text">历史记录</text>
+    </view>
+    <view class="nav-item" bindtap="goToFavorites">
+      <text class="nav-icon">⭐</text>
+      <text class="nav-text">我的收藏</text>
+    </view>
+  </view>
   <!-- 呼吸效果圆形容器 -->
   <view class="breathing-container" bindtap="onGetFortune">
     <view class="tea-cup">

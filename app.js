@@ -9,7 +9,28 @@ App({
     })
 
     console.log('Time in a Teacup Mini Program launched')
+
+    // 获取用户信息
+    this.getUserInfo()
   },
+
+  /**
+   * 获取用户openId和基本信息
+   */
+  getUserInfo() {
+    wx.cloud.callFunction({
+      name: 'getUserInfo',
+      data: {},
+      success: (res) => {
+        console.log('获取用户信息成功:', res.result)
+        this.globalData.userInfo = res.result
+      },
+      fail: (err) => {
+        console.error('获取用户信息失败:', err)
+      }
+    })
+  },
+
   globalData: {
     userInfo: null
   }

@@ -1,0 +1,27 @@
+<!--pages/history/history.wxml-->
+<view class="container">
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="title">历史记录</text>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <view class="history-list" wx:if="{{historyList.length > 0}}">
+    <view class="history-item" wx:for="{{historyList}}" wx:key="_id" bindtap="onHistoryItem" data-item="{{item}}">
+      <view class="history-date">{{item.date}}</view>
+      <view class="history-content">
+        <view class="history-keyword">{{item.keyword}}</view>
+        <view class="history-message">{{item.message}}</view>
+        <view class="history-color">
+          <view class="color-tag" style="background-color: {{item.colorCode}}">{{item.colorName}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{historyList.length === 0}}">
+    <text class="empty-text">还没有历史记录</text>
+    <text class="empty-hint">去获取你的第一张日签吧</text>
+  </view>
+</view>

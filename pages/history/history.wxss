@@ -1,0 +1,101 @@
+/* pages/history/history.wxss */
+.container {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  padding: 40rpx 0;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  letter-spacing: 4rpx;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+
+.history-item {
+  background-color: white;
+  border-radius: 32rpx;
+  padding: 32rpx;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+
+.history-item:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.history-date {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  margin-bottom: 16rpx;
+  letter-spacing: 2rpx;
+}
+
+.history-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.history-keyword {
+  font-size: 40rpx;
+  font-weight: 500;
+  color: var(--color-accent-blue);
+  letter-spacing: 6rpx;
+}
+
+.history-message {
+  font-size: 28rpx;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  letter-spacing: 2rpx;
+  font-style: italic;
+}
+
+.history-color {
+  display: flex;
+  align-items: center;
+}
+
+.color-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12rpx 24rpx;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  color: #4A4A4A;
+  font-weight: 400;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 0;
+  gap: 20rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: var(--color-text-secondary);
+}
+
+.empty-hint {
+  font-size: 24rpx;
+  color: #9B9B9B;
+}

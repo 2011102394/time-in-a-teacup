@@ -63,6 +63,9 @@ Page({
           console.log('治愈短句:', res.result.message)
           console.log('=============')
 
+          // 保存到历史记录
+          this.saveToHistory(res.result)
+
           wx.showToast({
             title: '获取日签成功',
             icon: 'success',
@@ -97,10 +100,67 @@ Page({
   },
 
   /**
+   * 保存到历史记录
+   * @param {Object} fortune - 运势数据
+   */
+  saveToHistory(fortune) {
+    const db = wx.cloud.database()
+    const today = new Date()
+    const dateStr = `${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`
+
+    db.collection('history').add({
+      data: {
+        keyword: fortune.keyword,
+        colorName: fortune.colorName,
+        colorCode: fortune.colorCode,
+        message: fortune.message,
+        date: dateStr,
+        createdAt: db.serverDate()
+      },
+      success: () => {
+        console.log('历史记录保存成功')
+      },
+      fail: (err) => {
+        console.error('历史记录保存失败:', err)
+      }
+    })
+  },
+
+  /**
    * 分享配置
    * @returns {Object} 分享配置对象
    */
   onShareAppMessage() {
+    if (this.data.fortuneData) {
+      return {
+        title: `今日日签：${this.data.fortuneData.keyword}`,
+        path: '/pages/index/index'
+      }
+    }
+    return {
+      title: '浅杯流年 - 获取你的今日日签',
+      path: '/pages/index/index'
+    }
+  },
+
+  /**
+   * 跳转到历史记录页
+   */
+  goToHistory() {
+    wx.navigateTo({
+      url: '/pages/history/history'
+    })
+  },
+
+  /**
+   * 跳转到收藏页（待实现）
+   */
+  goToFavorites() {
+    wx.showToast({
+      title: '收藏功能开发中',
+      icon: 'none'
+    })
+  }
     if (this.data.fortuneData) {
       return {
         title: `今日日签：${this.data.fortuneData.keyword}`,
