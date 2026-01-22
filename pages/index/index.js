@@ -109,8 +109,7 @@ Page({
     if (this.data.fortuneData) {
       return {
         title: `今日日签：${this.data.fortuneData.keyword}`,
-        path: '/pages/index/index',
-        imageUrl: ''
+        path: '/pages/index/index'
       }
     }
     return {
