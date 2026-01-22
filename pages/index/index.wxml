@@ -15,7 +15,7 @@
   </view>
   
   <!-- 日签卡片 -->
-  <view class="fortune-card" wx:if="{{fortuneData && !isLoading}}">
+  <view class="fortune-card" wx:if="{{fortuneData}}">
     <view class="fortune-header">
       <view class="fortune-date">{{todayDate}}</view>
       <view class="fortune-title">今日寄语</view>

@@ -1,7 +1,6 @@
 // index.js
 Page({
   data: {
-    isLoading: false,
     fortuneData: null,
     todayDate: ''
   },
@@ -51,10 +50,9 @@ Page({
 
         console.log('云函数调用成功:', res.result)
 
-        // 保存运势数据（颜色值直接使用大模型返回的HEX代码）
+        // 保存运势数据
         this.setData({
-          fortuneData: res.result,
-          isLoading: false
+          fortuneData: res.result
         })
 
         // 输出日签信息
@@ -75,9 +73,6 @@ Page({
       fail: (err) => {
         wx.hideLoading()
         console.error('云函数调用失败:', err)
-        this.setData({
-          isLoading: false
-        })
         wx.showToast({
           title: '获取日签失败',
           icon: 'none',
