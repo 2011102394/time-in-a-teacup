@@ -3,11 +3,43 @@ Page({
   data: {
     // 页面数据
     isLoading: false,
-    fortuneData: null
+    fortuneData: null,
+    todayDate: ''
   },
   onLoad() {
     // 页面加载时执行
     console.log('Home page loaded')
+    this.setTodayDate()
+  },
+  
+  // 设置当前日期
+  setTodayDate() {
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = today.getMonth() + 1
+    const day = today.getDate()
+    const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    const weekDay = weekDays[today.getDay()]
+    this.setData({
+      todayDate: `${year}.${month}.${day} ${weekDay}`
+    })
+  },
+  
+  // 获取颜色值映射
+  getColorValue(colorName) {
+    const colorMap = {
+      '晨雾蓝': '#B8C6D9',
+      '奶白色': '#F5F0E8',
+      '浅橘色': '#FFDAB9',
+      '薄荷绿': '#A8D8B9',
+      '淡紫色': '#D4C4B7',
+      '暖黄色': '#FFE4B5',
+      '樱花粉': '#FFD1DC',
+      '天空蓝': '#B0E0E6',
+      '橄榄绿': '#9CB071',
+      '香槟色': '#F7E7CE'
+    }
+    return colorMap[colorName] || '#D9C6B0'
   },
   
   // 茶杯点击事件
@@ -35,9 +67,15 @@ Page({
       success: (res) => {
         console.log('云函数调用成功:', res.result)
         
+        // 获取颜色值
+        const colorValue = this.getColorValue(res.result.color)
+        
         // 保存运势数据
         this.setData({
-          fortuneData: res.result,
+          fortuneData: {
+            ...res.result,
+            colorValue: colorValue
+          },
           isLoading: false
         })
         
@@ -49,11 +87,10 @@ Page({
           console.log('治愈短句:', res.result.message)
           console.log('=============')
           
-          // 这里可以添加显示日签卡片的逻辑
           wx.showToast({
             title: '获取日签成功',
             icon: 'success',
-            duration: 2000
+            duration: 1500
           })
         }
       },
@@ -69,5 +106,27 @@ Page({
         })
       }
     })
+  },
+  
+  // 重置，重新获取日签
+  onReset() {
+    this.setData({
+      fortuneData: null
+    })
+  },
+  
+  // 分享功能
+  onShareAppMessage() {
+    if (this.data.fortuneData) {
+      return {
+        title: `今日日签：${this.data.fortuneData.keyword}`,
+        path: '/pages/index/index',
+        imageUrl: ''
+      }
+    }
+    return {
+      title: '浅杯流年 - 获取你的今日日签',
+      path: '/pages/index/index'
+    }
   }
 })

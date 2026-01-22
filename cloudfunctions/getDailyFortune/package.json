@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "wx-server-sdk": "~2.19.0",
-    "@cloudbase/extension-calling": "^1.0.0"
+    "time-in-a-teacup": "file:../..",
+    "wx-server-sdk": "latest"
   }
 }

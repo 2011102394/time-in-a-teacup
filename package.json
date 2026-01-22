@@ -1,0 +1,8 @@
+{
+  "name": "time-in-a-teacup",
+  "version": "1.0.0",
+  "description": "Time in a Teacup Mini Program",
+  "main": "app.js",
+  "scripts": {},
+  "dependencies": {}
+}

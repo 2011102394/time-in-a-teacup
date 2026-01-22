@@ -52,7 +52,7 @@
     "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.19.4",
+  "libVersion": "3.14.0",
   "appid": "wxf18dce92c195a6a3",
   "projectname": "time-in-a-teacup",
   "isGameTourist": false,

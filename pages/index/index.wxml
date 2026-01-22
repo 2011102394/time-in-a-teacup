@@ -9,8 +9,44 @@
   </view>
   
   <!-- 欢迎语 -->
-  <view class="welcome-text">
+  <view class="welcome-text" wx:if="{{!fortuneData}}">
     <text>在流年里，慢下来。</text>
     <text class="hint-text">轻触茶杯，开启今日日签</text>
+  </view>
+  
+  <!-- 日签卡片 -->
+  <view class="fortune-card" wx:if="{{fortuneData && !isLoading}}">
+    <view class="fortune-header">
+      <view class="fortune-date">{{todayDate}}</view>
+      <view class="fortune-title">今日寄语</view>
+    </view>
+
+    <view class="fortune-content">
+      <!-- 关键词 -->
+      <view class="fortune-item">
+        <text class="item-label">今日关键词</text>
+        <text class="item-value keyword">{{fortuneData.keyword}}</text>
+      </view>
+
+      <!-- 幸运色 -->
+      <view class="fortune-item">
+        <text class="item-label">幸运颜色</text>
+        <view class="color-display" style="background-color: {{fortuneData.colorValue || '#D9C6B0'}}">
+          <text class="color-name">{{fortuneData.color}}</text>
+        </view>
+      </view>
+
+      <!-- 治愈短句 -->
+      <view class="fortune-item">
+        <text class="item-label">治愈寄语</text>
+        <text class="item-value message">{{fortuneData.message}}</text>
+      </view>
+    </view>
+
+    <!-- 底部操作按钮 -->
+    <view class="fortune-footer">
+      <button class="action-btn secondary" bindtap="onReset">再来一杯</button>
+      <button class="action-btn primary" open-type="share">分享日签</button>
+    </view>
   </view>
 </view>
