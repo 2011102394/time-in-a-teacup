@@ -93,38 +93,85 @@
   margin-right: 120rpx;
 }
 
-/* 茶杯容器 */
-.tea-cup {
-  width: 230rpx;
-  height: 230rpx;
-  background: radial-gradient(circle at 30% 30%, #C9B8A8 0%, #D9C6B0 40%, #E8DCC8 70%, #F5F0E5 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* 茶杯容器 - 3D等距视图 */
+.cup-wrapper {
   position: relative;
-  box-shadow: 
-    inset 0 20rpx 40rpx rgba(0, 0, 0, 0.15),
-    inset 0 -10rpx 20rpx rgba(255, 255, 255, 0.2),
-    inset 5rpx 5rpx 15rpx rgba(166, 145, 126, 0.3),
-    0 20rpx 50rpx rgba(0, 0, 0, 0.1);
-  border: 10rpx solid rgba(255, 255, 255, 0.25);
-  animation: breathe 4s ease-in-out infinite;
-  overflow: visible;
+  width: 240rpx;
+  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: breathe 4s ease-in-out infinite alternate;
+  transform-style: preserve-3d;
+  transform: rotateX(15deg) rotateY(15deg);
 }
 
-/* 茶杯高光效果 */
-.tea-cup::after {
+/* 杯身 - 碗状结构 */
+.cup-body {
+  width: 240rpx;
+  height: 140rpx;
+  background: linear-gradient(to right, #E0D2C5, #F9F7F2, #D4C4B7);
+  border-radius: 0 0 120rpx 120rpx;
+  box-shadow: 0 20rpx 40rpx rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* 杯身高光效果 */
+.cup-body::after {
   content: '';
   position: absolute;
   top: 20%;
-  right: 20%;
-  width: 60rpx;
-  height: 30rpx;
-  background: rgba(255, 255, 255, 0.6);
+  right: 15%;
+  width: 40rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  transform: rotate(30deg);
+  box-shadow: 0 0 20rpx rgba(255, 255, 255, 0.6);
+}
+
+/* 杯口 - 压扁的椭圆 */
+.cup-opening {
+  position: absolute;
+  top: -50rpx;
+  width: 240rpx;
+  height: 100rpx;
+  background: #F9F7F2;
+  border-radius: 50%;
+  border: 4rpx solid #E8E4D9;
+  box-shadow: 0 -5rpx 15rpx rgba(0, 0, 0, 0.05);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+}
+
+/* 茶汤 - 深琥珀色/茶色 */
+.tea-liquid {
+  position: absolute;
+  top: 50%;
+  width: 200rpx;
+  height: 70rpx;
+  background: radial-gradient(circle at 30% 30%, #D9C6B0, #8B7355);
+  border-radius: 50%;
+  box-shadow: inset 0 5rpx 15rpx rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+/* 茶汤高光 */
+.tea-liquid::after {
+  content: '';
+  position: absolute;
+  top: 15%;
+  right: 15%;
+  width: 30rpx;
+  height: 20rpx;
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   transform: rotate(45deg);
-  box-shadow: 0 0 20rpx rgba(255, 255, 255, 0.8);
 }
 
 /* 呼吸动画定义 */
@@ -163,7 +210,7 @@
 }
 
 /* 点击时的震动效果 */
-.breathing-container:active .tea-cup {
+.breathing-container:active .cup-wrapper {
   animation: shake 0.5s ease-in-out;
 }
 
@@ -174,95 +221,46 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   pointer-events: none;
   z-index: 5;
+  top: -20rpx;
 }
 
 /* 热气线条基础样式 */
 .steam {
   position: absolute;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+  background: rgba(245, 245, 245, 0.5);
   border-radius: 50px;
-  filter: blur(2rpx);
+  filter: blur(4rpx);
   opacity: 0;
-}
-
-/* 第一条热气 - 左侧 */
-.steam.s1 {
-  width: 8rpx;
-  height: 80rpx;
-  left: 35%;
-  bottom: 30%;
-  transform-origin: center bottom;
-  animation: steamRise 4s ease-out infinite;
-  animation-delay: 0s;
-}
-
-/* 第二条热气 - 中间偏右 */
-.steam.s2 {
-  width: 10rpx;
-  height: 100rpx;
-  left: 50%;
-  bottom: 25%;
-  transform-origin: center bottom;
-  animation: steamRise 5s ease-out infinite;
-  animation-delay: 1.5s;
-}
-
-/* 第三条热气 - 右侧 */
-.steam.s3 {
-  width: 6rpx;
-  height: 70rpx;
-  right: 35%;
-  bottom: 35%;
-  transform-origin: center bottom;
-  animation: steamRise 6s ease-out infinite;
-  animation-delay: 3s;
-}
-
-/* 热气上升动画 */
-@keyframes steamRise {
-  0% {
-    transform: translateY(0) scaleX(1) translateX(0);
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.5;
-  }
-  50% {
-    transform: translateY(-60rpx) scaleX(1.2) translateX(8rpx);
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateY(-140rpx) scaleX(1.5) translateX(-5rpx);
-    opacity: 0;
-  }
-}
-
-/* 旧版热气浮动动画（保留兼容） */
-.steam {
-  position: absolute;
   width: 16rpx;
   height: 60rpx;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: 50px;
   bottom: 20rpx;
   z-index: 1;
   animation: float linear infinite;
 }
 
-/* 第一缕热气 */
-.steam-1 {
+/* 第一条热气 - 左侧 */
+.steam.steam-1 {
   left: 35%;
   animation-duration: 3s;
 }
 
-/* 第二缕热气 */
-.steam-2 {
+/* 第二条热气 - 右侧 */
+.steam.steam-2 {
   right: 35%;
   animation-duration: 4.5s;
 }
+
+/* 第三条热气 - 中间 */
+.steam.steam-3 {
+  left: 50%;
+  animation-duration: 5s;
+  animation-delay: 1s;
+}
+
+
 
 /* 热气浮动动画 */
 @keyframes float {

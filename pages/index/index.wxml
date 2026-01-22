@@ -22,12 +22,16 @@
   <view class="main-content">
     <!-- 呼吸效果圆形容器 -->
     <view class="breathing-container" bindtap="onGetFortune">
-      <view class="tea-cup">
-        <!-- 热气容器 -->
-        <view class="steam-container">
-          <view class="steam s1"></view>
-          <view class="steam s2"></view>
-          <view class="steam s3"></view>
+      <view class="cup-wrapper">
+        <view class="cup-body"></view>
+        
+        <view class="cup-opening">
+          <view class="tea-liquid"></view>
+          <view class="steam-container">
+            <view class="steam steam-1"></view>
+            <view class="steam steam-2"></view>
+            <view class="steam steam-3"></view>
+          </view>
         </view>
       </view>
     </view>
